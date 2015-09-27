@@ -1,0 +1,69 @@
+# run_analysis
+Project Week 3 Getting and cleaning dat
+This file consists of description about the variables and other information used in the script run_analysis.R
+Background information
+Reading the background information about the course project helps. It can be obtained here:
+http://archive.ics.uci.edu/ml/datasets/Human+Activity+Recognition+Using+Smartphones
+ Data Source
+The dataset for this project can be downloaded here
+https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip  
+Variables and relevant information
+1.	datos1
+o	read data from "./UCI HAR Dataset/test/subject_test.txt"
+o	class = data frame
+o	dim = 2947 x 1
+2.	datos2
+o	read data from  "./UCI HAR Dataset/test/y_test.txt" 
+o	class = data frame
+o	dim = 2947 x 1
+3.	tabla1
+o	cbind(datos1, datos2)
+o	class = data frame
+o	dim = 7352 x 2
+4.	colnames(tabla1) <- c("subject", "activity")
+5.	datos3
+o	datos3 <- read.table("./UCI HAR Dataset/test/x_test.txt")
+o	class = data frame
+o	dim = 2947 x 561
+
+6.	features <- read.table("./UCI HAR Dataset/features.txt", header=FALSE)
+o	featureNames <- features[ ,2]
+o	colnames(datos3) <- featureNames
+7.	tabla2
+o	tabla2 <- cbind(tabla1, datos3)
+o	tabla2$newcolumn <- "test"
+8.	datos4
+o	datos4 <-  read.table("./UCI HAR Dataset/train/subject_train.txt")
+o	class = data frame
+o	dim = 7352 x 1
+9.	datos5
+o	datos5 <- read.table("./UCI HAR Dataset/train/y_train.txt")
+o	class = data frame
+o	dim = 7352 x 1
+10.	 tabla3
+o	Table3 <- cbind(datos4, datos5)
+o	class = data frame
+o	dim = 7352 x 2
+11.	 colnames(tabla3) <- c("subject", "activity")
+12.	 Tabla4
+o	tabla4 <- cbind(tabla3, datos5)
+o	tabla4$newcolumn <- "train"
+o	class = data frame
+o	dim = 7352 x 4
+13.	 consolidate
+o	consolidate <- rbind(tabla2, tabla4)
+o	class = data frame
+o	dim = 10299 x 564
+14.	 tidy_data1
+o	MeanStdv <- grepl("mean\\(\\)", featureNames) | grepl("std\\(\\)", featureNames)
+o	Keep <- c(TRUE, TRUE, MeanStdv)
+o	tidy_data1 >- consolidate[ , Keep]
+o	class = data frame
+o	dim = 10299 x 69
+15.	 tidy_data1$activity
+o	activity <- read.table("./UCI HAR Dataset/activity_labels.txt")
+o	tidy_data1$activity <- factor(tidy_data1$activity, levels=activity[,1], labels=activity[,2])
+16.	 tidyData
+o	tidyData <- tidy_data1 %>% group_by(activity, subject) %>% summarise_each(funs(mean))
+o	class = data frame
+o	dim = 180 x 69
